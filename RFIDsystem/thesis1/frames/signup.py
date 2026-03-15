@@ -164,7 +164,16 @@ class SignUpFrame(tk.Frame):
                     conn.commit()
 
             messagebox.showinfo("Success", f"Account created as {role}")
+            self.clear_fields()
             self.controller.show_frame("LoginFrame")
 
         except Exception as e:
             messagebox.showerror("Error", f"Database error: {e}")
+
+    
+    def clear_fields(self):
+        self.username.delete(0, tk.END)
+        self.employee_id.delete(0, tk.END)
+        self.password.delete(0, tk.END)
+        self.confirm.delete(0, tk.END)
+        self.role_var.set("Teacher")

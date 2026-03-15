@@ -13,6 +13,7 @@ class AdminOverrideFrame(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg="#f0e5ed")
         self.controller = controller
+        self.rfid_validator = self.register(self.validate_rfid)
         self.mode = None  # "add" or "edit"
 
         # --- Header ---
@@ -40,8 +41,16 @@ class AdminOverrideFrame(tk.Frame):
 
         tk.Label(self.form_container, text="RFID UID (Tap Card):", bg="white",
                  font=("Arial", 9, "bold"), fg="#6A1B9A").pack(anchor="w")
-        self.rfid_entry = tk.Entry(self.form_container, font=("Arial", 11), width=25, bd=1,
-                                   relief="solid", justify="center")
+        self.rfid_entry = tk.Entry(
+            self.form_container,
+            font=("Arial", 11),
+            width=25,
+            bd=1,
+            relief="solid",
+            justify="center",
+            validate="key",
+            validatecommand=(self.rfid_validator, "%P")
+        )
         self.rfid_entry.pack(pady=(5, 10), ipady=3)
         self.rfid_entry.bind("<Return>", lambda e: self.handle_save())
 
@@ -240,3 +249,10 @@ class AdminOverrideFrame(tk.Frame):
           self.rfid_entry.insert(0, uid)
 
           print("Admin Override RFID filled:", uid)
+
+
+    def validate_rfid(self, value):
+    # Reject spaces
+        if " " in value:
+            return False
+        return True

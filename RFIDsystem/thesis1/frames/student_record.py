@@ -128,6 +128,7 @@ class StudentRecord(tk.Frame):
 
         self.search_var = tk.StringVar()
         tk.Entry(self.right_panel, textvariable=self.search_var, width=25, font=("Arial", 11)).place(x=20, y=50)
+        self.search_var.trace_add("write", lambda *args: self.live_search())
 
         tk.Button(self.right_panel, text="Search", command=self.search_student).place(x=260, y=47)
         tk.Button(self.right_panel, text="Clear", command=self.clear_search).place(x=320, y=47)
@@ -151,7 +152,7 @@ class StudentRecord(tk.Frame):
             self.student_table.heading(col, text=txt)
             self.student_table.column(col, width=w)
 
-        self.student_table.place(x=20, y=120, width=500)
+        self.student_table.place(x=20, y=120, width=500, height=350)
         self.student_table.bind("<<TreeviewSelect>>", self.on_table_select)
 
         nav = tk.Frame(self.right_panel, bg="white")
@@ -457,3 +458,27 @@ class StudentRecord(tk.Frame):
                     cur.execute("SELECT Student_id FROM student WHERE Student_id=%s", (sid,))
                     return cur.fetchone() is not None
         except: return False
+
+    def live_search(self):
+        keyword = self.search_var.get().strip()
+
+        if not keyword:
+            self.clear_search()
+            return
+
+        try:
+            with db_connect() as conn:
+                with conn.cursor() as cursor:
+                    query = """
+                    SELECT Student_id, Student_name, Guardian_name
+                    FROM student
+                    WHERE Student_name LIKE %s OR Student_id LIKE %s
+                    """
+                    cursor.execute(query, (f"%{keyword}%", f"%{keyword}%"))
+                    self.search_results = cursor.fetchall()
+
+            self.search_page = 1
+            self.update_search_table()
+
+        except Exception as e:
+            print(f"Live search error: {e}")

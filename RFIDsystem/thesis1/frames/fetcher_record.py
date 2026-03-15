@@ -122,8 +122,9 @@ class FetcherRecord(tk.Frame):
         tk.Label(self.right_panel, text="Search FETCHER (Name/Address/Code)", font=("Arial", 12, "bold"), bg="white").place(x=20, y=15)
         self.search_var = tk.StringVar()
         tk.Entry(self.right_panel, textvariable=self.search_var, width=30, font=("Arial", 11)).place(x=20, y=50)
+
         tk.Button(self.right_panel, text="Search", command=self.search_fetcher).place(x=280, y=47)
-        
+        self.search_var.trace_add("write", lambda *args: self.live_search())
         # Link Clear button to clear_search for full UI reset
         tk.Button(self.right_panel, text="Clear", command=self.clear_search).place(x=340, y=47)
 
@@ -476,3 +477,29 @@ class FetcherRecord(tk.Frame):
             if value == "":
                 return True
             return False
+    
+    def live_search(self):
+        keyword = self.search_var.get().strip()
+
+        if not keyword:
+            self.clear_search()
+            return
+
+        try:
+            with db_connect() as conn:
+                with conn.cursor() as cursor:
+                    query = """
+                    SELECT ID, fetcher_code, Fetcher_name, Address, contact
+                    FROM fetcher
+                    WHERE Fetcher_name LIKE %s
+                    OR Address LIKE %s
+                    OR fetcher_code LIKE %s
+                    """
+                    cursor.execute(query, (f"%{keyword}%", f"%{keyword}%", f"%{keyword}%"))
+                    self.search_results = cursor.fetchall()
+
+            self.search_page = 1
+            self.update_search_table()
+
+        except Exception as e:
+            print(f"Live search error: {e}")

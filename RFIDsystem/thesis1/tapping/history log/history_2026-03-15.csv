@@ -1,0 +1,15 @@
+Date,Time,Fetcher,Student,Status
+2026-03-15,17:47:00,TEACHER (Bill),Rosé Park,AUTHORIZED (TEACHER OVERRIDE)
+2026-03-15,17:47:14,TEACHER (Bill),Lisa Manobal,AUTHORIZED (TEACHER OVERRIDE)
+2026-03-15,17:47:32,ADMIN (Kent),Jennie Kim,AUTHORIZED (ADMIN OVERRIDE)
+2026-03-15,17:47:45,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-03-15,17:49:27,Luz Manalo,Kimberly Manalo,AUTHORIZED
+2026-03-15,17:51:36,TEACHER (Joan),Millie Brown,AUTHORIZED (TEACHER OVERRIDE)
+2026-03-15,17:52:22,Rosa Dominguez,Dale Dominguez,AUTHORIZED
+2026-03-15,17:52:28,Rosa Dominguez,Shiela Dominguez,AUTHORIZED
+2026-03-15,17:53:03,Angela Flores,Samantha Villanueva,AUTHORIZED
+2026-03-15,17:53:09,Emilio Navarro,Winsley Bautista,AUTHORIZED
+2026-03-15,17:53:19,Dell Cruz,Stephen Cruz,AUTHORIZED
+2026-03-15,17:53:32,Angela Flores,Nathaniel Villanueva,AUTHORIZED
+2026-03-15,17:53:49,Emilio Navarro,Justin Cruz,AUTHORIZED
+2026-03-15,17:54:06,Joyce Shelby,Thomas Shelby,AUTHORIZED

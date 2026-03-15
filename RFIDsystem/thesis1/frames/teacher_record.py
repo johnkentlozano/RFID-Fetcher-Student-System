@@ -121,6 +121,7 @@ class TeacherRecord(tk.Frame):
 
         self.search_var = tk.StringVar()
         tk.Entry(self.right_panel, textvariable=self.search_var, width=25, font=("Arial", 11)).place(x=20, y=50)
+        self.search_var.trace_add("write", lambda *args: self.live_search())
         tk.Button(self.right_panel, text="Search", command=self.search_teacher).place(x=260, y=47)
         
         # Link to clear_search for complete UI reset
@@ -429,3 +430,30 @@ class TeacherRecord(tk.Frame):
         elif self.current_page > 1:
             self.current_page -= 1
             self.load_teachers()
+
+    def live_search(self):
+        keyword = self.search_var.get().strip()
+
+        if not keyword:
+            self.clear_search()
+            return
+
+        try:
+            with db_connect() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT teacher_id, teacher_name, department
+                        FROM teacher
+                        WHERE teacher_name LIKE %s
+                        OR department LIKE %s
+                        """,
+                        (f"%{keyword}%", f"%{keyword}%")
+                    )
+                    self.search_results = cursor.fetchall()
+
+            self.search_page = 1
+            self.update_search_table()
+
+        except Exception as e:
+            print(f"Live search error: {e}")

@@ -138,5 +138,14 @@ class LoginFrame(tk.Frame):
             self.password.config(show="")
         else:
             self.password.config(show="*")
-            
+
+    def reset_fields(self):
+        self.username.delete(0, tk.END)
+        self.employee_id.delete(0, tk.END)
+        self.password.delete(0, tk.END)
+
+    def tkraise(self, aboveThis=None):
+        super().tkraise(aboveThis)
+        self.reset_fields()
+                
    

@@ -50,6 +50,7 @@ class RfidRegistration(tk.Frame):
         self.contact_validator = self.register(self.validate_contact)
          
         self.setup_ui()
+        self.set_default_ui_photos()
         self.reset_load()
 
     def sync_student_to_link(self, *args):
@@ -202,9 +203,9 @@ class RfidRegistration(tk.Frame):
         return entries
 
     def remove_photo(self, target):
-        if self.mode == "view": return
-        target.config(image="", text="No Photo")
-        target.image_bytes = None
+        if self.mode == "view":
+            return
+        self.display_blob(target, None)
 
     def save_record(self):
         # 1. Gather Input Data
@@ -451,7 +452,7 @@ class RfidRegistration(tk.Frame):
             default_path = os.path.join(BASE_DIR, "assets", "default.png") 
             
             if os.path.exists(default_path):
-                img = Image.open(default_path).resize((100, 100))
+                img = Image.open(default_path).resize((180, 180), Image.Resampling.LANCZOS)
                 buf = io.BytesIO()
                 img.save(buf, format='PNG')
                 return buf.getvalue()
@@ -502,10 +503,13 @@ class RfidRegistration(tk.Frame):
                 print(f"Error displaying blob: {e}")
                 self.remove_photo(target)
         else:
-            # Revert to the "No Photo" placeholder look
-            target.config(image="", text="No Photo", width=20, height=10) 
-            target.image_bytes = None
-            target.image = None
+            default_bytes = self.get_default_photo_bytes()
+            if default_bytes:
+                img = Image.open(io.BytesIO(default_bytes)).resize((180,180), Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(img)
+                target.config(image=photo, text="", width=180, height=180)
+                target.image = photo
+                target.image_bytes = None
             
     def auto_fill_student_details(self, *args):
         sid = self.student_id_var.get().strip()

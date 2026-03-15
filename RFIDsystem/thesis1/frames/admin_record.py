@@ -120,7 +120,7 @@ class AdminRecord(tk.Frame):
         tk.Label(self.right_panel, text="Search Admin (NAME)", font=("Arial", 14, "bold"), bg="white").place(x=20, y=15)
 
         self.search_var = tk.StringVar()
-
+        self.search_var.trace_add("write", lambda *args: self.live_search())
         tk.Entry(self.right_panel, textvariable=self.search_var, width=25, font=("Arial", 11)).place(x=20, y=50)
 
         tk.Button(self.right_panel, text="Search", command=self.search_admin).place(x=260, y=47)
@@ -454,3 +454,34 @@ class AdminRecord(tk.Frame):
 
       except Exception as e:
           print("Load Admin Error:", e)
+          
+
+    def live_search(self):
+
+        keyword = self.search_var.get().strip()
+
+        if not keyword:
+            self.load_admins()
+            return
+
+        try:
+
+            with db_connect() as conn:
+                with conn.cursor() as cursor:
+
+                    cursor.execute(
+                        "SELECT admin_id, admin_name, role FROM admin WHERE admin_name LIKE %s",
+                        (f"%{keyword}%",)
+                    )
+
+                    rows = cursor.fetchall()
+
+                    self.admin_table.delete(*self.admin_table.get_children())
+
+                    for row in rows:
+                        self.admin_table.insert("", "end", values=row)
+
+                    self.admin_count_var.set(f"Matches: {len(rows)}")
+
+        except Exception as e:
+            print("Live Search Error:", e)

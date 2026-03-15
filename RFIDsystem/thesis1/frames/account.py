@@ -168,9 +168,15 @@ class Account(tk.Frame):
         user_data = self.account_table.item(selected, "values")
         user_id, username = user_data[0], user_data[2]  # Corrected index: username is 2
 
-        if hasattr(self.controller, 'current_user') and username == self.controller.current_user:
-            messagebox.showerror("Action Denied", "You cannot delete your own account while logged in.")
-            return
+        if self.controller and getattr(self.controller, "current_user", None):
+            current_username = self.controller.current_user.get("username")
+
+            if username == current_username:
+                messagebox.showerror(
+                    "Action Denied",
+                    "You cannot delete your own account while logged in."
+                )
+                return
 
         if messagebox.askyesno("Confirm Deletion", f"Are you sure you want to delete account: {username}?\nThis action cannot be undone."):
             try:
