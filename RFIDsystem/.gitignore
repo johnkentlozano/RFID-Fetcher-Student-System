@@ -1,0 +1,32 @@
+# Byte-compiled / Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+venv/
+.env
+
+# Logs
+*.log
+history_logs/
+
+# Database / Data files
+*.db
+*.sqlite3
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Ignore secrets if any
+*.env
