@@ -20,8 +20,6 @@ from frames.forgot_password import ForgotPasswordFrame
 from frames.adminoverride import AdminOverrideFrame
 from frames.admin_record import AdminRecord
 
-
-
 class Rfid(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -29,7 +27,6 @@ class Rfid(tk.Tk):
         self.title("RFID MANAGEMENT SYSTEM - Cainta Catholic College")
         self.geometry("1350x700+0+0")
 
-        # --- SESSION & STATE ---
         self.current_user = None 
         self.current_frame_name = "LoginFrame"
         self.ser = None
@@ -40,7 +37,6 @@ class Rfid(tk.Tk):
 
         self.frames = {}
 
-        # Load initial frames
         for FrameClass in (LoginFrame, SignUpFrame, ForgotPasswordFrame):
             frame = FrameClass(self.container, self)
             self.frames[FrameClass.__name__] = frame
@@ -48,13 +44,12 @@ class Rfid(tk.Tk):
 
         self.show_frame("LoginFrame")
         
-        # Start the global Arduino listener
         self.start_serial_listener()
 
     def show_frame(self, name):
         restricted_pages = [
-            "MainDashboard", "StudentRecord", "TeacherRecord","AdminRecord", "ClassroomFrame",
-            "FetcherRecord", "RfidRegistration","OverrideFrame", "RFIDHistory", 
+            "MainDashboard", "StudentRecord", "TeacherRecord","ClassroomFrame","admin_record",
+            "FetcherRecord", "RfidRegistration","OverrideFrame","AdminOverrideFrame", "RFIDHistory", 
             "Report", "Account"
         ]
         
@@ -64,17 +59,7 @@ class Rfid(tk.Tk):
             return
 
         if self.current_user and self.current_user.get("role") == "Teacher":
-            admin_only = [
-                "TeacherRecord",
-                "AdminRecord",
-                "AdminOverrideFrame",
-                "RfidRegistration",
-                "StudentRecord",
-                "FetcherRecord",
-                "RFIDHistory",
-                "Report",
-                "Account"
-            ]
+            admin_only = ["TeacherRecord", "RfidRegistration", "StudentRecord", "FetcherRecord", "RFIDHistory", "Report", "Account"]
             if name in admin_only:
                 messagebox.showwarning("Access Denied", "Teachers do not have permission to access this module.")
                 return
@@ -83,10 +68,7 @@ class Rfid(tk.Tk):
         self.current_frame_name = name
         self.frames[name].tkraise()
 
-    
-
     def dispatch_rfid(self, uid):
-        # Always start from MainDashboard after login
         dashboard = self.frames.get("MainDashboard")
 
         if dashboard and hasattr(dashboard, "current_frame") and dashboard.current_frame:
@@ -95,18 +77,13 @@ class Rfid(tk.Tk):
             active_frame = self.frames.get(self.current_frame_name)
 
         if not active_frame:
-            print("Debug: Active frame not found.")
             return
 
         if hasattr(active_frame, "handle_rfid_tap"):
-            print(f"Success: Calling handle_rfid_tap on {type(active_frame).__name__}")
             active_frame.handle_rfid_tap(uid)
+
         elif hasattr(active_frame, "handle_rfid_scan"):
             active_frame.handle_rfid_scan(uid)
-        else:
-            print(f"Warning: {type(active_frame).__name__} has no RFID handler.")
-
-    # Check for the specific methods regardless of the class name
 
     def login_success(self, user_data):
         self.current_user = user_data  
@@ -158,9 +135,9 @@ class Rfid(tk.Tk):
     def on_closing(self):
         self.running = False
         self.destroy()
+        
 
 if __name__ == "__main__":
     app = Rfid()
     app.protocol("WM_DELETE_WINDOW", app.on_closing)
     app.mainloop()
-    

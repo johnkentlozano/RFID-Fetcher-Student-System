@@ -45,8 +45,9 @@ class SignUpFrame(tk.Frame):
         form_container = tk.Frame(panel, bg="white")
         form_container.pack(fill="x", padx=40)
 
-        self.username = self.entry(form_container, "Username")
-        self.employee_id = self.entry(form_container, "Employee ID")
+        # Pass the new 'alphanumeric' flag to the entry helper
+        self.username = self.entry(form_container, "Username", validate_type="alphanumeric")
+        self.employee_id = self.entry(form_container, "Employee ID", validate_type="numeric")
         
         # --- Password Field ---
         tk.Label(form_container, text="Password", bg="white", font=("Arial", 9, "bold")).pack(anchor="w")
@@ -106,9 +107,23 @@ class SignUpFrame(tk.Frame):
                          command=lambda: self.controller.show_frame("LoginFrame"))
         back.pack()
 
-    def entry(self, panel, text, hide=False):
+    def entry(self, panel, text, hide=False, validate_type=None):
         tk.Label(panel, text=text, bg="white", font=("Arial", 9, "bold")).pack(anchor="w")
-        e = tk.Entry(panel, font=("Arial", 12), bg="#F8F9FA", bd=0, highlightthickness=1, highlightbackground="#CCCCCC", show="*" if hide else "")
+    
+
+        e = tk.Entry(panel, font=("Arial", 12), bg="#F8F9FA", bd=0, 
+                 highlightthickness=1, highlightbackground="#CCCCCC", 
+                 show="*" if hide else "")
+    
+   
+        if validate_type == "alphanumeric":
+            vcmd = (self.register(self.validate_username), '%P')
+            e.config(validate="key", validatecommand=vcmd)
+            
+        if validate_type == "numeric":
+            vcmd = (self.register(self.validate_employeed_id), '%P')
+            e.config(validate="key", validatecommand=vcmd)
+        
         e.pack(fill="x", ipady=6, pady=(2, 10))
         return e
 
@@ -134,6 +149,7 @@ class SignUpFrame(tk.Frame):
         pw = self.password.get()
         cpw = self.confirm.get()
         role = self.role_var.get()
+        
 
         if not user or not pw or not emp_id:
             messagebox.showerror("Error", "All fields required")
@@ -164,16 +180,13 @@ class SignUpFrame(tk.Frame):
                     conn.commit()
 
             messagebox.showinfo("Success", f"Account created as {role}")
-            self.clear_fields()
             self.controller.show_frame("LoginFrame")
 
         except Exception as e:
             messagebox.showerror("Error", f"Database error: {e}")
-
+            
+    def validate_username(self, text):
+        return text.isalnum() or text == ""
     
-    def clear_fields(self):
-        self.username.delete(0, tk.END)
-        self.employee_id.delete(0, tk.END)
-        self.password.delete(0, tk.END)
-        self.confirm.delete(0, tk.END)
-        self.role_var.set("Teacher")
+    def validate_employeed_id(self, text):
+        return text.isdigit() or text == ""

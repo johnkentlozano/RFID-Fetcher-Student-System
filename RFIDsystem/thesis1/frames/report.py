@@ -152,7 +152,7 @@ class Report(tk.Frame):
         return self.fetch_data("SELECT ID, Student_name, grade_lvl, created_at FROM student")
 
     def get_teachers(self):
-        return self.fetch_data("SELECT teacher_id, Teacher_name, created_at FROM teacher")
+        return self.fetch_data("SELECT teacher_id,teacher_name, created_at FROM teacher")
 
     def get_fetchers(self):
         return self.fetch_data("SELECT ID, fetcher_name, contact, created_at FROM fetcher")
@@ -183,32 +183,124 @@ class Report(tk.Frame):
     # ================= EXPORT =================
     def export_popup(self):
         win = tk.Toplevel(self)
-        win.title("Export")
-        win.geometry("280x240")
+        win.title("Export Reports")
+        win.geometry("320x350")
         win.resizable(False, False)
-        win.configure(bg="#e0f7fa")
+        win.configure(bg="white")
+        win.grab_set()  # Focus on this window
 
+        # Styling headers
+        lbl_style = {"bg": "white", "font": ("Arial", 10, "bold"), "fg": "#333"}
+
+        tk.Label(win, text="1. SELECT DATA", **lbl_style).pack(pady=(15, 5))
+        
         choice = tk.StringVar(value="students")
+        choices_frame = tk.Frame(win, bg="white")
+        choices_frame.pack()
+        
+        # Added "All Reports" option
+        options = [("Students", "students"), ("Teachers", "teachers"), 
+                   ("Fetchers", "fetchers"), ("All Reports", "all")]
+        
+        for text, mode in options:
+            tk.Radiobutton(choices_frame, text=text, variable=choice, value=mode, 
+                           bg="white", activebackground="white", font=("Arial", 10)).pack(anchor="w")
+
+        tk.Label(win, text="2. SELECT FORMAT", **lbl_style).pack(pady=(15, 5))
+        
         fmt = tk.StringVar(value="csv")
+        formats_frame = tk.Frame(win, bg="white")
+        formats_frame.pack()
+        
+        for f_text, f_mode in [("CSV", "csv"), ("Excel", "excel"), ("PDF", "pdf")]:
+            tk.Radiobutton(formats_frame, text=f_text, variable=fmt, value=f_mode, 
+                           bg="white", activebackground="white").pack(side="left", padx=10)
 
-        tk.Label(win, text="Choose Data", font=("Arial", 11, "bold"), bg="#e0f7fa").pack(pady=5)
-        for v in ("students", "teachers", "fetchers"):
-            tk.Radiobutton(win, text=v.title(), variable=choice, value=v, bg="#e0f7fa").pack(anchor="w", padx=40)
-
-        tk.Label(win, text="Format", font=("Arial", 11, "bold"), bg="#e0f7fa").pack(pady=5)
-        for v in ("csv", "excel", "pdf"):
-            tk.Radiobutton(win, text=v.upper(), variable=fmt, value=v, bg="#e0f7fa").pack(anchor="w", padx=40)
-
+        # Export Button
         tk.Button(
             win,
-            text="Export",
-            bg="#4CAF50",
+            text="START EXPORT",
+            bg="#0047AB",
             fg="white",
-            width=16,
-            relief="raised",
-            bd=2,
-            command=lambda: self.export(choice.get(), fmt.get(), win)
-        ).pack(pady=10)
+            font=("Arial", 11, "bold"),
+            relief="flat",
+            width=20,
+            cursor="hand2",
+            command=lambda: self.export_logic(choice.get(), fmt.get(), win)
+        ).pack(pady=25)
+        
+    def export_logic(self, choice, fmt, win):
+        # Define which tables to process
+        data_map = {
+            "students": (self.student_table, "Student_Report"),
+            "teachers": (self.teacher_table, "Teacher_Report"),
+            "fetchers": (self.fetcher_table, "Fetcher_Report")
+        }
+
+        if choice == "all":
+            # Select folder for multiple files
+            folder_path = filedialog.askdirectory(title="Select Folder to Save Reports")
+            if not folder_path: return
+            
+            for key in data_map:
+                table, default_name = data_map[key]
+                full_path = os.path.join(folder_path, f"{default_name}.{fmt}")
+                self.save_file(table, fmt, full_path)
+        else:
+            # Single file save
+            table, default_name = data_map[choice]
+            path = filedialog.asksaveasfilename(
+                defaultextension=f".{fmt}",
+                initialfile=default_name,
+                filetypes=[(fmt.upper(), f"*.{fmt}")]
+            )
+            if not path: return
+            self.save_file(table, fmt, path)
+
+        win.destroy()
+        messagebox.showinfo("Export Success", f"Reports have been saved as {fmt.upper()}.")
+
+    def save_file(self, table, fmt, path):
+        """Helper to handle the actual writing logic"""
+        headers = table["columns"]
+        rows = [table.item(i, "values") for i in table.get_children()]
+
+        if fmt == "csv":
+            with open(path, "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(headers)
+                writer.writerows(rows)
+
+        elif fmt == "excel":
+            wb = Workbook()
+            ws = wb.active
+            ws.append(headers)
+            for r in rows:
+                ws.append(r)
+            wb.save(path)
+
+        elif fmt == "pdf":
+            pdf = canvas.Canvas(path, pagesize=letter)
+            y = 750
+            pdf.setFont("Helvetica-Bold", 12)
+            pdf.drawString(40, y, f"Report Exported on {datetime.now().strftime('%Y-%m-%d')}")
+            y -= 30
+            
+            # Draw Headers
+            pdf.setFont("Helvetica-Bold", 10)
+            pdf.drawString(40, y, " | ".join(headers))
+            pdf.line(40, y-5, 550, y-5)
+            y -= 25
+            
+            # Draw Rows
+            pdf.setFont("Helvetica", 9)
+            for r in rows:
+                if y < 50:
+                    pdf.showPage()
+                    y = 750
+                pdf.drawString(40, y, " | ".join(map(str, r)))
+                y -= 18
+            pdf.save()
 
     def export(self, choice, fmt, win):
         table = {
