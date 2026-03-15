@@ -1,0 +1,93 @@
+Date,Time,Fetcher,Student,Status
+2026-02-21,11:22:28,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,11:25:11,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-21,11:27:19,Pamela Linga,Karina Yu,AUTHORIZED
+2026-02-21,11:27:24,Mel Tiangco,Ryujin Shin,AUTHORIZED
+2026-02-21,11:27:36,Karen  Coangco,Somi Jeon,AUTHORIZED
+2026-02-21,11:27:47,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-21,11:28:05,Teresita,Lee Ji-eun,AUTHORIZED
+2026-02-21,11:32:11,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-21,11:34:18,TEACHER (Koro),Nagisa Shiota,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-21,11:41:39,Teresita,Lee Ji-eun,AUTHORIZED
+2026-02-21,11:41:51,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-21,11:41:58,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-21,11:42:03,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-21,11:42:09,Pamela Linga,Karina Yu,AUTHORIZED
+2026-02-21,11:42:15,Karen  Coangco,Somi Jeon,AUTHORIZED
+2026-02-21,11:42:20,Mel Tiangco,Ryujin Shin,AUTHORIZED
+2026-02-21,11:42:32,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,11:42:37,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,11:42:43,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,11:43:12,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,11:43:18,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,11:43:23,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,11:43:29,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,11:57:20,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,11:57:26,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,11:57:35,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,11:57:50,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,11:57:58,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,11:58:06,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,11:58:14,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,11:58:26,Teresita,Lee Ji-eun,AUTHORIZED
+2026-02-21,11:58:30,Pamela Linga,Karina Yu,AUTHORIZED
+2026-02-21,11:58:37,Mel Tiangco,Ryujin Shin,AUTHORIZED
+2026-02-21,11:58:43,Karen  Coangco,Somi Jeon,AUTHORIZED
+2026-02-21,11:58:49,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-21,11:58:56,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-21,11:59:02,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-21,13:02:31,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,13:02:45,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,13:02:54,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,13:03:03,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,13:29:40,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,13:29:51,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,13:30:03,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,13:30:22,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,13:30:29,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,13:30:40,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,13:30:50,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,14:07:31,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,14:07:44,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,14:07:55,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,14:14:52,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,14:14:56,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,14:15:04,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,14:15:11,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,14:36:45,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,14:37:04,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,14:37:12,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,14:59:43,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,15:00:09,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,15:15:53,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,15:16:09,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,15:16:16,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,16:48:04,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-21,16:48:10,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-21,16:57:35,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,16:57:42,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,16:57:49,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,16:57:58,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,17:09:20,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,17:09:29,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,17:09:50,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,17:09:59,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,17:20:09,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,17:20:21,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,17:20:31,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,17:22:56,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,17:23:06,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,17:23:15,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,17:27:10,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-21,17:27:19,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-21,17:27:24,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-21,17:27:34,Magdalena,Rosé Park,AUTHORIZED
+2026-02-21,17:27:51,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-21,17:27:56,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-21,17:28:03,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,17:28:12,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,17:28:20,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,18:04:22,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-21,18:04:34,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-21,18:04:45,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-21,18:04:55,Magdalena,Jennie Kim,AUTHORIZED

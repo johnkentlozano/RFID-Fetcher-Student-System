@@ -1,0 +1,132 @@
+Date,Time,Fetcher,Student,Status
+2026-02-23,00:09:26,TEACHER (Andi),Lee Ji-eun,DENIED
+2026-02-23,00:09:49,TEACHER (Andi),Lee Ji-eun,DENIED
+2026-02-23,00:10:02,TEACHER (Mark),Lee Ji-eun,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,00:11:18,TEACHER (Mark),Nagisa Shiota,DENIED
+2026-02-23,00:11:28,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-23,00:27:16,TEACHER (Mark),Lee Ji-eun,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,00:28:16,Natividad Sanchez,Lee Ji-eun,DENIED
+2026-02-23,00:28:27,Teresita,Lee Ji-eun,AUTHORIZED
+2026-02-23,00:28:38,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-23,00:33:36,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-23,00:33:45,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-23,00:34:15,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-23,00:34:24,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-23,00:34:35,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-23,00:34:52,Magdalena,Rosé Park,AUTHORIZED
+2026-02-23,00:35:10,TEACHER (Andi),Jennie Kim,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,00:35:26,Teresita,Lee Ji-eun,AUTHORIZED
+2026-02-23,00:35:31,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-23,00:35:37,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-23,00:35:46,Karen  Coangco,Somi Jeon,AUTHORIZED
+2026-02-23,00:35:53,Natividad Sanchez,Hanni Pham,AUTHORIZED
+2026-02-23,00:36:00,Mel Tiangco,Ryujin Shin,AUTHORIZED
+2026-02-23,00:36:06,Pamela Linga,Karina Yu,AUTHORIZED
+2026-02-23,00:39:55,Magdalena,Rosé Park,AUTHORIZED
+2026-02-23,00:40:00,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-23,00:40:06,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-23,00:40:12,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-23,00:40:18,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-23,00:40:24,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-23,00:40:30,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-23,00:57:00,Magdalena,Rosé Park,AUTHORIZED
+2026-02-23,00:57:09,Irina Jelavic,Nagisa Shiota,AUTHORIZED
+2026-02-23,00:57:15,Magdalena,Lisa Manobal,AUTHORIZED
+2026-02-23,00:57:28,Magdalena,Jisoo Kim,AUTHORIZED
+2026-02-23,00:57:37,Karmen Solomon,Chaewon Kim,AUTHORIZED
+2026-02-23,00:57:45,Jose Manalo,Na-yeon Im,AUTHORIZED
+2026-02-23,00:57:57,Magdalena,Jennie Kim,AUTHORIZED
+2026-02-23,00:58:14,Jose Manalo,Sana Minatozaki,AUTHORIZED
+2026-02-23,00:58:24,Jose Manalo,Dahyun Kim,AUTHORIZED
+2026-02-23,03:12:24,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,03:12:31,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,03:12:36,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:12:42,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,03:27:33,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:28:23,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:37:03,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:54:09,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:55:44,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:56:43,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:57:14,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,03:57:38,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,04:28:00,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,04:28:05,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,04:28:10,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,04:37:26,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,08:40:57,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,08:50:25,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,08:50:34,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,08:50:39,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,08:50:45,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,08:59:09,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,09:10:09,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,09:38:01,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,09:38:07,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,09:38:17,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,09:38:22,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,09:43:47,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,09:43:57,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,09:44:03,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,09:44:08,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,09:47:34,TEACHER (Bill),Rosé Park,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,09:47:46,TEACHER (Bill),Jisoo Kim,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,09:47:57,TEACHER (Bill),Lisa Manobal,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,09:48:20,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,09:49:03,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,09:49:09,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,09:49:15,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,09:49:22,TEACHER (Bill),Rosé Park,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,10:00:40,Joyce Shelby,Thomas Shelby,AUTHORIZED
+2026-02-23,10:01:03,Joyce Shelby,Thomas Shelby,AUTHORIZED
+2026-02-23,10:01:33,TEACHER (Ana),Thomas Shelby,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,10:02:11,TEACHER (Ana),Thomas Shelby,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,10:13:19,TEACHER (Joan),Millie Brown,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,10:13:34,Jimmy Brown,Millie Brown,AUTHORIZED
+2026-02-23,10:14:07,Jimmy Brown,Millie Brown,AUTHORIZED
+2026-02-23,10:14:37,TEACHER (Joan),Millie Brown,AUTHORIZED (TEACHER OVERRIDE)
+2026-02-23,10:15:18,Joyce Shelby,Thomas Shelby,AUTHORIZED
+2026-02-23,10:49:45,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,10:49:58,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,10:50:11,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,10:50:20,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,10:50:41,Rosa Dominguez,Dale Dominguez,AUTHORIZED
+2026-02-23,10:50:55,Rosa Dominguez,Shiela Dominguez,AUTHORIZED
+2026-02-23,10:51:13,Angela Flores,Samantha Villanueva,AUTHORIZED
+2026-02-23,10:51:22,Angela Flores,Nathaniel Villanueva,AUTHORIZED
+2026-02-23,10:51:32,Emilio Navarro,Winsley Bautista,AUTHORIZED
+2026-02-23,10:51:41,Emilio Navarro,Justin Cruz,AUTHORIZED
+2026-02-23,10:51:51,Luz Manalo,Kimberly Manalo,AUTHORIZED
+2026-02-23,10:52:01,Joyce Shelby,Thomas Shelby,AUTHORIZED
+2026-02-23,10:52:13,Jimmy Brown,Millie Brown,AUTHORIZED
+2026-02-23,10:52:21,Dell Cruz,Stephen Cruz,AUTHORIZED
+2026-02-23,10:58:21,Emilio Navarro,Justin Cruz,AUTHORIZED
+2026-02-23,10:58:27,Emilio Navarro,Winsley Bautista,AUTHORIZED
+2026-02-23,10:58:34,Angela Flores,Nathaniel Villanueva,AUTHORIZED
+2026-02-23,10:58:39,Angela Flores,Samantha Villanueva,AUTHORIZED
+2026-02-23,10:58:49,Rosa Dominguez,Shiela Dominguez,AUTHORIZED
+2026-02-23,10:58:54,Rosa Dominguez,Dale Dominguez,AUTHORIZED
+2026-02-23,10:59:08,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,10:59:13,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,10:59:19,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,10:59:24,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,14:46:32,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,14:46:38,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,14:46:52,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,14:47:05,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,14:49:28,Dell Cruz,Dale Dominguez,DENIED
+2026-02-23,14:49:41,Dell Cruz,Stephen Cruz,AUTHORIZED
+2026-02-23,22:04:37,Luz Manalo,Kimberly Manalo,AUTHORIZED
+2026-02-23,22:04:48,Maria Santos,Jennie Kim,AUTHORIZED
+2026-02-23,22:04:57,Maria Santos,Lisa Manobal,AUTHORIZED
+2026-02-23,22:05:06,Maria Santos,Rosé Park,AUTHORIZED
+2026-02-23,22:05:20,Maria Santos,Jisoo Kim,AUTHORIZED
+2026-02-23,22:05:30,Rosa Dominguez,Dale Dominguez,AUTHORIZED
+2026-02-23,22:05:40,Rosa Dominguez,Shiela Dominguez,AUTHORIZED
+2026-02-23,22:05:49,Angela Flores,Nathaniel Villanueva,AUTHORIZED
+2026-02-23,22:06:00,Angela Flores,Samantha Villanueva,AUTHORIZED
+2026-02-23,22:06:09,Emilio Navarro,Winsley Bautista,AUTHORIZED
+2026-02-23,22:06:18,Emilio Navarro,Justin Cruz,AUTHORIZED
+2026-02-23,22:06:28,Dell Cruz,Stephen Cruz,AUTHORIZED
+2026-02-23,22:06:37,Joyce Shelby,Thomas Shelby,AUTHORIZED
+2026-02-23,22:06:48,Jimmy Brown,Millie Brown,AUTHORIZED
