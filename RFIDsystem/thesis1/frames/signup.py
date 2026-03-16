@@ -180,6 +180,7 @@ class SignUpFrame(tk.Frame):
                     conn.commit()
 
             messagebox.showinfo("Success", f"Account created as {role}")
+            self.clear_fields()
             self.controller.show_frame("LoginFrame")
 
         except Exception as e:
@@ -190,3 +191,14 @@ class SignUpFrame(tk.Frame):
     
     def validate_employeed_id(self, text):
         return text.isdigit() or text == ""
+
+    def clear_fields(self):
+        self.username.delete(0, tk.END)
+        self.employee_id.delete(0, tk.END)
+        self.password.delete(0, tk.END)
+        self.confirm.delete(0, tk.END)
+        self.role_var.set("Teacher")
+
+        # Reset password requirement colors
+        for label in self.pw_reqs.values():
+            label.config(fg="red")
