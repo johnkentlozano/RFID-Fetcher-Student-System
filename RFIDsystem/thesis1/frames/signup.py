@@ -197,8 +197,16 @@ class SignUpFrame(tk.Frame):
         self.employee_id.delete(0, tk.END)
         self.password.delete(0, tk.END)
         self.confirm.delete(0, tk.END)
+
+        self.password.config(show="*")
+        self.confirm.config(show="*")
+
         self.role_var.set("Teacher")
 
         # Reset password requirement colors
         for label in self.pw_reqs.values():
             label.config(fg="red")
+
+    def tkraise(self, aboveThis=None):
+        super().tkraise(aboveThis)
+        self.clear_fields()
