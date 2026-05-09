@@ -3,12 +3,15 @@ from tkinter import messagebox
 from PIL import ImageTk, Image
 import sys, os
 import bcrypt
+
 # Ensure utility imports work
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
+
 from utils.database import db_connect
 from utils.validators import validate_required
-from utils.helpers import add_hover_effect, get_image_path # make sure this exists
+from utils.helpers import add_hover_effect, get_image_path
+
 
 class LoginFrame(tk.Frame):
     def __init__(self, parent, controller):
@@ -53,52 +56,92 @@ class LoginFrame(tk.Frame):
         input_container = tk.Frame(panel, bg="white")
         input_container.pack(fill="x", padx=40)
 
-        # Username
-        tk.Label(input_container, text="Username", bg="white", font=("Arial", 10, "bold")).pack(anchor="w")
-        self.username = tk.Entry(input_container, font=("Arial", 12), bg="#F8F9FA", bd=0,
-                                 highlightthickness=1, highlightbackground="#CCCCCC")
+        # -------- RFID --------
+        tk.Label(input_container, text="Tap RFID", bg="white",
+                 font=("Arial", 10, "bold")).pack(anchor="w")
+
+        self.rfid_uid = tk.Entry(input_container, font=("Arial", 12),
+                                 bg="#F8F9FA", bd=0,
+                                 highlightthickness=1,
+                                 highlightbackground="#CCCCCC")
+        self.rfid_uid.pack(fill="x", ipady=8, pady=(5, 15))
+
+        self.rfid_uid.focus()
+        self.rfid_uid.bind("<Return>", self.rfid_login)
+
+        # -------- Username --------
+        tk.Label(input_container, text="Username", bg="white",
+                 font=("Arial", 10, "bold")).pack(anchor="w")
+
+        self.username = tk.Entry(input_container, font=("Arial", 12),
+                                 bg="#F8F9FA", bd=0,
+                                 highlightthickness=1,
+                                 highlightbackground="#CCCCCC")
         self.username.pack(fill="x", ipady=8, pady=(5, 15))
 
-        # Employee ID
-        tk.Label(input_container, text="Employee ID", bg="white", font=("Arial", 10, "bold")).pack(anchor="w")
-        self.employee_id = tk.Entry(input_container, font=("Arial", 12), bg="#F8F9FA", bd=0,
-                                    highlightthickness=1, highlightbackground="#CCCCCC")
+        # -------- Employee ID --------
+        tk.Label(input_container, text="Employee ID", bg="white",
+                 font=("Arial", 10, "bold")).pack(anchor="w")
+
+        self.employee_id = tk.Entry(input_container, font=("Arial", 12),
+                                    bg="#F8F9FA", bd=0,
+                                    highlightthickness=1,
+                                    highlightbackground="#CCCCCC")
         self.employee_id.pack(fill="x", ipady=8, pady=(5, 15))
 
-        # Password
-        tk.Label(input_container, text="Password", bg="white", font=("Arial", 10, "bold")).pack(anchor="w")
-        pass_frame = tk.Frame(input_container, bg="#F8F9FA", highlightthickness=1, highlightbackground="#CCCCCC")
+        # -------- Password --------
+        tk.Label(input_container, text="Password", bg="white",
+                 font=("Arial", 10, "bold")).pack(anchor="w")
+
+        pass_frame = tk.Frame(input_container, bg="#F8F9FA",
+                              highlightthickness=1,
+                              highlightbackground="#CCCCCC")
         pass_frame.pack(fill="x", pady=(5, 0))
 
-        self.password = tk.Entry(pass_frame, font=("Arial", 12), bg="#F8F9FA", bd=0, show="*")
-        self.password.pack(side=tk.LEFT, fill="x", expand=True, ipady=8, padx=5)
+        self.password = tk.Entry(pass_frame, font=("Arial", 12),
+                                 bg="#F8F9FA", bd=0, show="*")
+        self.password.pack(side=tk.LEFT, fill="x",
+                           expand=True, ipady=8, padx=5)
 
-        toggle_button = tk.Button(pass_frame, text="👁️", bg="#F8F9FA", bd=0, cursor="hand2",
+        toggle_button = tk.Button(pass_frame, text="👁️",
+                                  bg="#F8F9FA", bd=0,
+                                  cursor="hand2",
                                   command=self.password_visibility)
         toggle_button.pack(side=tk.RIGHT, padx=5)
 
-        # Login Button
-        btn = tk.Button(panel, text="LOGIN", bg="#0047AB", fg="white", cursor="hand2",
-                        font=("Arial", 12, "bold"), bd=0, command=self.login)
+        # -------- Login Button --------
+        btn = tk.Button(panel, text="LOGIN", bg="#0047AB",
+                        fg="white", cursor="hand2",
+                        font=("Arial", 12, "bold"),
+                        bd=0, command=self.login)
         btn.pack(fill="x", padx=40, pady=(30, 10), ipady=10)
         add_hover_effect(btn, "#003380", "#0047AB")
-        
 
-        # Footer
+        # -------- Footer --------
         footer_frame = tk.Frame(panel, bg="white")
         footer_frame.pack(fill="x", padx=40)
 
-        su = tk.Button(footer_frame, text="Create Account", font=("Arial", 9), bg="white", fg="#00A86B",
-                       bd=0, cursor="hand2", command=lambda: self.controller.show_frame("SignUpFrame"))
-        su.pack(side=tk.LEFT)
+        tk.Button(footer_frame, text="Create Account",
+                  font=("Arial", 9), bg="white",
+                  fg="#00A86B", bd=0, cursor="hand2",
+                  command=lambda: self.controller.show_frame("SignUpFrame")
+                  ).pack(side=tk.LEFT)
 
-        forgot_btn = tk.Button(footer_frame,text="Forgot Password?",fg="#666666",bg="white",bd=0,font=("Arial", 9),cursor="hand2",
-            command=lambda: self.controller.show_frame("ForgotPasswordFrame")
-        )
-        forgot_btn.pack(side=tk.RIGHT)
+        tk.Button(footer_frame, text="Forgot Password?",
+                  fg="#666666", bg="white", bd=0,
+                  font=("Arial", 9), cursor="hand2",
+                  command=lambda: self.controller.show_frame("ForgotPasswordFrame")
+                  ).pack(side=tk.RIGHT)
 
     # ---------------- LOGIN LOGIC ----------------
     def login(self):
+        rfid = self.rfid_uid.get().strip()
+
+        if rfid:
+            self.rfid_login()
+            return
+
+        # ✅ MANUAL LOGIN
         user = self.username.get().strip()
         emp_id = self.employee_id.get().strip()
         pw = self.password.get()
@@ -110,7 +153,10 @@ class LoginFrame(tk.Frame):
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    cur.execute("SELECT password, employee_id, role FROM users WHERE username=%s", (user,))
+                    cur.execute(
+                        "SELECT password, employee_id, role FROM users WHERE username=%s",
+                        (user,)
+                    )
                     result = cur.fetchone()
         except Exception as e:
             messagebox.showerror("Error", f"Database error: {e}")
@@ -127,10 +173,55 @@ class LoginFrame(tk.Frame):
                 messagebox.showerror("Error", "Password is incorrect")
                 return
 
-            user_data = {"username": user, "employee_id": emp_id, "role": role}
+            user_data = {
+                "username": user,
+                "employee_id": emp_id,
+                "role": role
+            }
+
             self.controller.login_success(user_data)
+
         else:
             messagebox.showerror("Error", "Username not found")
+
+    # ---------------- RFID LOGIN ----------------
+    def rfid_login(self, event=None):
+        rfid = self.rfid_uid.get().strip()
+
+        if not rfid:
+            return
+
+        try:
+            with db_connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT username, employee_id, role FROM users WHERE rfid_uid=%s",
+                        (rfid,)
+                    )
+                    result = cur.fetchone()
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Database error: {e}")
+            return
+
+        if result:
+            username, emp_id, role = result
+
+            user_data = {
+                "username": username,
+                "employee_id": emp_id,
+                "role": role
+            }
+
+            messagebox.showinfo("Success", "RFID Login Successful")
+            self.controller.login_success(user_data)
+
+        else:
+            messagebox.showerror("Error", "RFID not registered")
+
+        # reset field
+        self.rfid_uid.delete(0, tk.END)
+        self.rfid_uid.focus()
 
     # ---------------- PASSWORD TOGGLE ----------------
     def password_visibility(self):
@@ -139,13 +230,14 @@ class LoginFrame(tk.Frame):
         else:
             self.password.config(show="*")
 
+    # ---------------- RESET ----------------
     def reset_fields(self):
         self.username.delete(0, tk.END)
         self.employee_id.delete(0, tk.END)
         self.password.delete(0, tk.END)
+        self.rfid_uid.delete(0, tk.END)
 
     def tkraise(self, aboveThis=None):
         super().tkraise(aboveThis)
         self.reset_fields()
-                
-   
+        self.rfid_uid.focus()

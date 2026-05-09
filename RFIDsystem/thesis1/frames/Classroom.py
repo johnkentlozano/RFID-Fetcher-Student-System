@@ -16,7 +16,6 @@ class ClassroomFrame(tk.Frame):
         super().__init__(parent, bg="#F0F4F8")
         self.controller = controller
         
-        # 1. Get Session Data
         self.user_data = getattr(
             self.controller,
             "current_user",
@@ -25,12 +24,12 @@ class ClassroomFrame(tk.Frame):
         self.username = self.user_data.get("username")
         self.employee_id = self.user_data.get("employee_id")
         
-        # 2. Sync Teacher Name from DB
+
         self.real_teacher_name = self.get_teacher_display_name()
         self.last_log_id = None  
-        self.current_photo = None # Keep reference to avoid garbage collection
+        self.current_photo = None 
         
-        # Start background loop
+
         self.check_for_updates() 
 
         # ================= HEADER =================
@@ -100,7 +99,7 @@ class ClassroomFrame(tk.Frame):
                     res = cur.fetchone()
                     return res[0] if res else self.username
         except Exception as e:
-            print("Teacher Lookup Error:", e)
+            messagebox.showwarning("Teacher name error ")
             return self.username
 
     # ================= TABLE & UI SETUP =================

@@ -22,9 +22,6 @@ class MainDashboard(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        
-        # Pull the current user data from the controller (Role-based access)
-        # Default to Teacher if session is missing for safety
         self.user_data = getattr(self.controller, "current_user", {"role": "Teacher", "username": "User"})
         self.role = self.user_data.get("role", "Teacher")
         
@@ -53,11 +50,11 @@ class MainDashboard(tk.Frame):
         if self.role == "Admin":
             self.create_menu_button("Student Record", StudentRecord)
             self.create_menu_button("Teacher Record", TeacherRecord)
-            self.create_menu_button("Admin Record", AdminRecord)
             self.create_menu_button("Fetcher Record", FetcherRecord)
-            self.create_menu_button("RFID Registration", RfidRegistration)
-            self.create_menu_button("Override", OverrideFrame)
-            self.create_menu_button("Admin Override", AdminOverrideFrame)
+            self.create_menu_button("Admin Record", AdminRecord)
+            self.create_menu_button("Assign Fetcher to Student", RfidRegistration)
+            self.create_menu_button("Admin Override Card", AdminOverrideFrame)
+            self.create_menu_button("Teacher Override Card", OverrideFrame)
             self.create_menu_button("History Log", RFIDHistory)
             self.create_menu_button("Reports", Report)
             self.create_menu_button("Account Settings", Account)
@@ -115,17 +112,12 @@ class MainDashboard(tk.Frame):
             self.current_frame = frame_class(self.main_area, self.controller)
             self.current_frame.pack(fill="both", expand=True)
 
-            # 2. CRITICAL FIX: Tell the Main App (controller) that THIS is the active frame
-            # This ensures dispatch_rfid sends data to the visible frame
-            frame_name = frame_class.__name__
-            
-            
 
+            frame_name = frame_class.__name__
+        
             # 3. Highlight menu button
             for btn, cls in self.menu_buttons.items():
                 btn.config(bg="#00838f" if cls == frame_class else "#00acc1")
-                
-            print(f"Debug: MainDashboard switched to {frame_name}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to open {frame_class.__name__}:\n{e}")
 

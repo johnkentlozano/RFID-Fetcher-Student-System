@@ -45,8 +45,14 @@ class SignUpFrame(tk.Frame):
         form_container = tk.Frame(panel, bg="white")
         form_container.pack(fill="x", padx=40)
 
-        self.username = self.entry(form_container, "Username")
-        self.employee_id = self.entry(form_container, "Employee ID")
+
+        self.rfid_uid = self.entry(form_container, "Tap RFID (Optional)", validate_type="alphanumeric")
+        self.rfid_uid.focus()
+        self.rfid_uid.bind("<Return>", self.rfid_scanned)
+        self.rfid_buffer = ""
+        self.bind_all("<Key>", self.capture_rfid)
+        self.username = self.entry(form_container, "Username", validate_type="alphanumeric")
+        self.employee_id = self.entry(form_container, "Employee ID", validate_type="numeric")
         
         # --- Password Field ---
         tk.Label(form_container, text="Password", bg="white", font=("Arial", 9, "bold")).pack(anchor="w")
@@ -106,9 +112,23 @@ class SignUpFrame(tk.Frame):
                          command=lambda: self.controller.show_frame("LoginFrame"))
         back.pack()
 
-    def entry(self, panel, text, hide=False):
+    def entry(self, panel, text, hide=False, validate_type=None):
         tk.Label(panel, text=text, bg="white", font=("Arial", 9, "bold")).pack(anchor="w")
-        e = tk.Entry(panel, font=("Arial", 12), bg="#F8F9FA", bd=0, highlightthickness=1, highlightbackground="#CCCCCC", show="*" if hide else "")
+    
+
+        e = tk.Entry(panel, font=("Arial", 12), bg="#F8F9FA", bd=0, 
+                 highlightthickness=1, highlightbackground="#CCCCCC", 
+                 show="*" if hide else "")
+    
+   
+        if validate_type == "alphanumeric":
+            vcmd = (self.register(self.validate_username), '%P')
+            e.config(validate="key", validatecommand=vcmd)
+            
+        if validate_type == "numeric":
+            vcmd = (self.register(self.validate_employeed_id), '%P')
+            e.config(validate="key", validatecommand=vcmd)
+        
         e.pack(fill="x", ipady=6, pady=(2, 10))
         return e
 
@@ -131,10 +151,12 @@ class SignUpFrame(tk.Frame):
     def signup(self):
         user = self.username.get().strip()
         emp_id = self.employee_id.get().strip()
+        rfid = self.rfid_uid.get().strip()
         pw = self.password.get()
         cpw = self.confirm.get()
         role = self.role_var.get()
 
+    # ✅ Required fields
         if not user or not pw or not emp_id:
             messagebox.showerror("Error", "All fields required")
             return
@@ -152,28 +174,60 @@ class SignUpFrame(tk.Frame):
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    cur.execute("SELECT * FROM users WHERE employee_id=%s", (emp_id,))
+
+                # ✅ Check duplicate Employee ID
+                    cur.execute("SELECT * FROM users WHERE employee_id = %s", (emp_id,))
                     if cur.fetchone():
-                        messagebox.showerror("Error", "Employee ID exists")
+                        messagebox.showerror("Error", "Employee ID already exists")
                         return
 
+                # ✅ Check duplicate RFID (if provided)
+                    if rfid:
+                        cur.execute("SELECT * FROM users WHERE rfid_uid = %s", (rfid,))
+                        if cur.fetchone():
+                            messagebox.showerror("Error", "RFID already registered")
+                            return
+
+                # ✅ Insert user
                     cur.execute(
-                        "INSERT INTO users (username, password, employee_id, role) VALUES (%s, %s, %s, %s)",
-                        (user, hashed, emp_id, role)
+                        """
+                        INSERT INTO users (username, password, employee_id, role, rfid_uid)
+                        VALUES (%s, %s, %s, %s, %s)
+                        """,
+                        (user, hashed, emp_id, role, rfid if rfid else None)
                     )
+
                     conn.commit()
 
             messagebox.showinfo("Success", f"Account created as {role}")
-            self.clear_fields()
             self.controller.show_frame("LoginFrame")
 
         except Exception as e:
             messagebox.showerror("Error", f"Database error: {e}")
-
+            
+    def validate_username(self, text):
+        return text.isalnum() or text == ""
     
-    def clear_fields(self):
-        self.username.delete(0, tk.END)
-        self.employee_id.delete(0, tk.END)
-        self.password.delete(0, tk.END)
-        self.confirm.delete(0, tk.END)
-        self.role_var.set("Teacher")
+    def validate_employeed_id(self, text):
+        return text.isdigit() or text == ""
+    
+    def rfid_scanned(self, event=None):
+        rfid_value = self.rfid_uid.get().strip()
+
+        if rfid_value:
+            messagebox.showinfo("RFID Detected", f"RFID: {rfid_value}")
+        
+            self.username.focus()
+            
+    def capture_rfid(self, event):
+        if event.keysym == "Return":
+            if self.rfid_buffer:
+                self.rfid_uid.delete(0, tk.END)
+                self.rfid_uid.insert(0, self.rfid_buffer)
+
+                messagebox.showinfo("RFID Detected", f"RFID: {self.rfid_buffer}")
+            
+                self.rfid_buffer = ""
+                self.username.focus()
+        else:
+            self.rfid_buffer += event.char

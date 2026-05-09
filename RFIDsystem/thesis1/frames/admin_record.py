@@ -86,8 +86,6 @@ class AdminRecord(tk.Frame):
 
         self.employee_id_entry.place(x=150, y=240)
 
-        # ================= BUTTONS =================
-
         btn_frame = tk.Frame(self.left_box, bg="white")
         btn_frame.place(x=15, y=320)
 
@@ -167,12 +165,13 @@ class AdminRecord(tk.Frame):
         self.photo_path = None
         self.photo_label.config(image="")
 
-    # ================= UI CONTROL =================
 
-    def set_fields_state(self,state):
-
+    def set_fields_state(self, state):
         self.name_entry.config(state=state)
         self.employee_id_entry.config(state=state)
+
+        self.upload_btn.config(state=state)
+        self.remove_btn.config(state=state)
 
     def reset_ui_state(self):
 
@@ -195,8 +194,6 @@ class AdminRecord(tk.Frame):
         self.admin_name_var.set("")
         self.employee_id_var.set("")
         self.photo_label.config(image="")
-
-    # ================= CRUD =================
 
     def add_admin(self):
 
@@ -377,42 +374,46 @@ class AdminRecord(tk.Frame):
 
     def delete_admin(self):
 
-      selected = self.admin_table.focus()
+        if self.delete_btn["text"] == "CANCEL":
+            self.reset_ui_state()
+            return
 
-      if not selected:
-          messagebox.showwarning("Select", "Please select an admin to delete.")
-          return
+        selected = self.admin_table.focus()
 
-      data = self.admin_table.item(selected)["values"]
-      admin_id = data[0]
+        if not selected:
+            messagebox.showwarning("Select", "Please select an admin to delete.")
+            return
 
-      confirm = messagebox.askyesno(
-          "Confirm Delete",
-          "Are you sure you want to delete this admin?"
-      )
+        data = self.admin_table.item(selected)["values"]
+        admin_id = data[0]
 
-      if not confirm:
-          return
+        confirm = messagebox.askyesno(
+            "Confirm Delete",
+            "Are you sure you want to delete this admin?"
+        )
 
-      try:
-          with db_connect() as conn:
-              with conn.cursor() as cursor:
+        if not confirm:
+            return
 
-                  cursor.execute(
-                      "DELETE FROM admin WHERE admin_id=%s",
-                      (admin_id,)
-                  )
+        try:
+            with db_connect() as conn:
+                with conn.cursor() as cursor:
 
-                  conn.commit()
+                    cursor.execute(
+                    "DELETE FROM admin WHERE admin_id=%s",
+                    (admin_id,)
+                )
 
-          messagebox.showinfo("Success", "Admin deleted successfully")
+                    conn.commit()
 
-          self.reset_ui_state()
-          self.load_admins()
+            messagebox.showinfo("Success", "Admin deleted successfully")
 
-      except Exception as e:
-          messagebox.showerror("Database Error", str(e))
+            self.reset_ui_state()
+            self.load_admins()
 
+        except Exception as e:
+            messagebox.showerror("Database Error", str(e))
+            
     def on_select(self, event):
 
       selected = self.admin_table.focus()

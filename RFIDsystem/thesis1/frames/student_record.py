@@ -197,7 +197,8 @@ class StudentRecord(tk.Frame):
         self.display_photo(None) # Updated call
 
 
-    def only_numbers(self, v): return v.isdigit() or v == ""
+    def only_numbers(self, v):
+        return (v.isdigit() and len(v) <= 8) or v == ""
     def contact_limit(self, v): return (v.isdigit() and len(v) <= 11) or v == ""
 
     def format_contact(self, *_):

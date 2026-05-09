@@ -326,7 +326,6 @@ class FetcherRecord(tk.Frame):
             self.edit_label.config(text="ADD MODE", fg="white", bg="green")
             return
 
-    # SAVE MODE
         if not all([self.fetcher_name_var.get().strip(), self.address_var.get().strip()]):
             return messagebox.showerror("Error", "Name and Address are required")
 
@@ -346,7 +345,7 @@ class FetcherRecord(tk.Frame):
                     VALUES (%s,%s,%s,%s,%s)
                 """
                     cursor.execute(query, (
-                        self.fetcher_code_var.get(),  # ✅ USE GENERATED VALUE
+                        self.fetcher_code_var.get(), 
                         self.fetcher_name_var.get().strip(),
                         self.address_var.get().strip(),
                         self.contact_var.get().strip(),
@@ -471,7 +470,6 @@ class FetcherRecord(tk.Frame):
             return "FC_0001"
         
     def validate_contact(self, value):
-            # Allow only numbers and maximum of 11 digits
             if value.isdigit() and len(value) <= 11:
                 return True
             if value == "":
@@ -502,4 +500,4 @@ class FetcherRecord(tk.Frame):
             self.update_search_table()
 
         except Exception as e:
-            print(f"Live search error: {e}")
+            messagebox.showwarning(f"Live search error: {e}")

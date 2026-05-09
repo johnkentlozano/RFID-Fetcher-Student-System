@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-import os
-import sys
+import os, sys
 
 # Ensure utility imports work
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,11 +11,11 @@ from utils.database import db_connect
 
 class OverrideFrame(tk.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, bg="#b2e5ed")
+        super().__init__(parent, bg="#b2e5ed") # Keeping your light blue theme
         self.controller = controller
         self.rfid_validator = self.register(self.validate_rfid)
-        self.editing_mode = False 
-        
+        self.mode = None  # "add" or "edit" logic from Admin frame
+
         # --- UI Header ---
         header = tk.Frame(self, bg="#0047AB", height=60)
         header.pack(fill="x")
@@ -32,9 +31,8 @@ class OverrideFrame(tk.Frame):
                                        highlightthickness=2, highlightbackground="#CCCCCC")
         self.form_container.pack(side="left", fill="y", padx=(0, 20))
 
-        # Edit Mode Indicator
-        self.mode_label = tk.Label(self.form_container, text="🆕 NEW REGISTRATION", 
-                                   font=("Arial", 10, "bold"), bg="#e8f5e9", fg="#2e7d32", pady=5)
+        self.mode_label = tk.Label(self.form_container, text="IDLE: SELECT ACTION", 
+                                    font=("Arial", 10, "bold"), bg="#f5f5f5", fg="#757575", pady=5)
         self.mode_label.pack(fill="x", pady=(0, 15))
 
         tk.Label(self.form_container, text="Teacher Employee ID:", bg="white", font=("Arial", 9, "bold")).pack(anchor="w")
@@ -56,31 +54,25 @@ class OverrideFrame(tk.Frame):
         self.rfid_entry.pack(pady=(5, 10), ipady=3)
         self.rfid_entry.bind("<Return>", lambda e: self.handle_save())
 
-        # Buttons
-        self.save_btn = tk.Button(self.form_container, text="➕ REGISTER CARD", command=self.handle_save, 
-                                  bg="#4CAF50", fg="white", font=("Arial", 9, "bold"), width=20, pady=8, bd=0)
-        self.save_btn.pack(pady=5)
+        # Action Buttons (Mirrored from Admin Management)
+        self.add_btn = tk.Button(self.form_container, text="➕ ADD NEW", command=self.start_add,
+                                 bg="#4CAF50", fg="white", font=("Arial", 9, "bold"), width=20, pady=6)
+        self.add_btn.pack(pady=3)
 
-        self.edit_btn = tk.Button(
-            self.form_container,
-            text="✏️ EDIT",
-            command=self.enable_edit_mode,
-            bg="#2196F3",
-            fg="white",
-            font=("Arial", 9, "bold"),
-            width=20,
-            pady=8,
-            bd=0
-        )
-        self.edit_btn.pack(pady=5)
-        
-        # Initialize Cancel Button (Hidden by default)
-        self.cancel_btn = tk.Button(self.form_container, text="✖ CANCEL EDIT", command=self.clear_form, 
-                                    bg="#757575", fg="white", font=("Arial", 9, "bold"), width=20, pady=5, bd=0)
-        
-        self.del_btn = tk.Button(self.form_container, text="🗑️ DELETE RECORD", command=self.handle_delete, 
-                                 bg="#f44336", fg="white", font=("Arial", 9, "bold"), width=20, pady=8, bd=0)
-        self.del_btn.pack(pady=5)
+        self.edit_btn = tk.Button(self.form_container, text="✏ EDIT SELECTED", command=self.start_edit,
+                                  bg="#2196F3", fg="white", font=("Arial", 9, "bold"), width=20, pady=6)
+        self.edit_btn.pack(pady=3)
+
+        self.save_btn = tk.Button(self.form_container, text="💾 SAVE CHANGES", command=self.handle_save,
+                                  bg="#FF9800", fg="white", font=("Arial", 9, "bold"), width=20, pady=6)
+        self.save_btn.pack(pady=3)
+
+        self.del_btn = tk.Button(self.form_container, text="🗑 DELETE", command=self.handle_delete,
+                                 bg="#f44336", fg="white", font=("Arial", 9, "bold"), width=20, pady=6)
+        self.del_btn.pack(pady=3)
+
+        self.cancel_btn = tk.Button(self.form_container, text="✖ CANCEL", command=self.clear_form,
+                                    bg="#757575", fg="white", font=("Arial", 9, "bold"), width=20, pady=6)
 
         # --- RIGHT SIDE: List ---
         list_container = tk.Frame(main_container, bg="white", padx=10, pady=10, 
@@ -103,198 +95,106 @@ class OverrideFrame(tk.Frame):
         self.tree.column("Status", width=100, anchor="center")
         self.tree.pack(fill="both", expand=True)
         
-        self.tree.bind("<<TreeviewSelect>>", self.on_item_select)
         self.refresh_list()
-        
-        # SET INITIAL FOCUS so RFID scanning works immediately
+        self.clear_form()
+
+    # ---------------- UI STATE CONTROL (Applied from Admin Code) ----------------
+    def set_ui_state(self, state):
+        if state == "idle":
+            self.emp_id_entry.config(state="disabled")
+            self.rfid_entry.config(state="disabled")
+            self.save_btn.config(state="disabled")
+            self.cancel_btn.pack_forget()
+            self.add_btn.config(state="normal")
+            self.edit_btn.config(state="normal")
+            self.del_btn.config(state="normal")
+            self.tree.config(selectmode="browse")
+        elif state == "active":
+            self.emp_id_entry.config(state="normal")
+            self.rfid_entry.config(state="normal")
+            self.save_btn.config(state="normal")
+            self.cancel_btn.pack(after=self.save_btn, pady=3)
+            self.add_btn.config(state="disabled")
+            self.edit_btn.config(state="disabled")
+            self.del_btn.config(state="disabled")
+            self.tree.config(selectmode="none")
+
+    # ---------------- ACTIONS ----------------
+    def start_add(self):
+        self.mode = "add"
+        self.set_ui_state("active")
+        self.emp_id_entry.delete(0, tk.END)
+        self.rfid_entry.delete(0, tk.END)
+        self.mode_label.config(text="➕ ADDING NEW TEACHER", bg="#e8f5e9", fg="#2e7d32")
         self.emp_id_entry.focus_set()
 
-    # --- KEY FIXES ---
-
-    def handle_save(self):
-        eid = self.emp_id_entry.get().strip()
-        uid = self.rfid_entry.get().strip()
-
-        if not eid or not uid:
-            messagebox.showwarning("Input Error", "ID and RFID are required.")
+    def start_edit(self):
+        selected = self.tree.focus()
+        if not selected:
+            messagebox.showwarning("Selection Required", "Please select a record.")
             return
-
-        try:
-            with db_connect() as conn:
-                with conn.cursor() as cur:
-                    # 1. Check if Teacher exists in main users table
-                    cur.execute("SELECT username FROM users WHERE employee_id = %s AND role = 'Teacher'", (eid,))
-                    teacher_exists = cur.fetchone()
-                    
-                    if not teacher_exists:
-                        messagebox.showerror("Error", f"Employee ID {eid} is not a registered Teacher.")
-                        return
-
-                    # --- NEW: BLOCK REGISTRATION IF ALREADY EXISTS ---
-                    if not self.editing_mode: # Only check if we are creating a NEW record
-                        cur.execute("SELECT employee_id FROM teacher_rfid_registration WHERE employee_id = %s", (eid,))
-                        if cur.fetchone():
-                            messagebox.showwarning("Already Registered", 
-                                f"Teacher with ID {eid} is already registered.\nUse 'Edit' to change their RFID.")
-                            return
-
-                    # 2. Duplicate RFID check (Is this card used by someone else?)
-                    cur.execute("SELECT employee_id FROM teacher_rfid_registration WHERE rfid_uid = %s AND employee_id != %s", (uid, eid))
-                    if cur.fetchone():
-                        messagebox.showerror("Duplicate RFID", "This card is already assigned to another teacher.")
-                        return
-
-                    # 3. Save Logic
-                    if self.editing_mode:
-                        confirm = messagebox.askyesno(
-                            "Confirm Update",
-                            "Are you sure you want to update this RFID?"
-                        )
-
-                        if not confirm:
-                            return
-                        cur.execute("""
-                            UPDATE teacher_rfid_registration 
-                            SET rfid_uid = %s 
-                            WHERE employee_id = %s
-                        """, (uid, eid))
-                    else:
-                        cur.execute("""
-                            INSERT INTO teacher_rfid_registration (employee_id, rfid_uid, status) 
-                            VALUES (%s, %s, 'Active')
-                        """, (eid, uid))
-                    
-                    conn.commit()
-
-            messagebox.showinfo("Success", "Registration processed successfully.")
-            self.refresh_list()
-            self.clear_form()
-        except Exception as e:
-            messagebox.showerror("Database Error", str(e))
-
-    def on_item_select(self, event):
-        selected_items = self.tree.selection()
-        if not selected_items:
-            return
-
-        selected = selected_items[0]
-
         values = self.tree.item(selected, "values")
+        self.mode = "edit"
+        self.set_ui_state("active")
 
-        teacher_id = values[0]
-        teacher_name = values[1]
-        uid = values[2]
-
-        # VIEW MODE
-        self.editing_mode = False
-
-        self.mode_label.config(
-            text=f"👁 VIEWING: {teacher_name}",
-            bg="#e3f2fd",
-            fg="#0d47a1"
-        )
-
-        # Show values in input boxes
         self.emp_id_entry.config(state="normal")
-        self.rfid_entry.config(state="normal")
-
         self.emp_id_entry.delete(0, tk.END)
-        self.emp_id_entry.insert(0, teacher_id)
+        self.emp_id_entry.insert(0, values[0])
+        self.emp_id_entry.config(state="readonly")
 
         self.rfid_entry.delete(0, tk.END)
-        self.rfid_entry.insert(0, uid)
+        self.rfid_entry.insert(0, values[2])
 
-        # Lock them in view mode
-        self.emp_id_entry.config(state="readonly")
-        self.rfid_entry.config(state="readonly")
-
-        # Show edit button
-        self.edit_btn.pack(pady=5)
-
-    def enable_edit_mode(self):
-
-        self.editing_mode = True
-
-        self.mode_label.config(
-            text="✏️ EDIT MODE",
-            bg="#fff3e0",
-            fg="#e65100"
-        )
-
-        self.rfid_entry.config(state="normal")
-
-        # Hide edit button
-        self.edit_btn.pack_forget()
-
-        # Change register button
-        self.save_btn.config(
-            text="💾 UPDATE CHANGES",
-            bg="#FF9800"
-        )
-
-        # Show cancel button
-        self.cancel_btn.pack(after=self.save_btn, pady=5)
+        self.mode_label.config(text=f"✏️ EDITING: {values[1]}", bg="#fff3e0", fg="#e65100")
+        self.rfid_entry.focus_set()
 
     def clear_form(self):
-        self.editing_mode = False
-
-        self.mode_label.config(
-            text="🆕 NEW REGISTRATION",
-            bg="#e8f5e9",
-            fg="#2e7d32"
-        )
-
-        self.save_btn.config(
-            text="➕ REGISTER CARD",
-            bg="#4CAF50"
-        )
-
-        self.cancel_btn.pack_forget()
-
-        self.edit_btn.pack(pady=5)
-
+        self.mode = None
         self.emp_id_entry.config(state="normal")
-        self.rfid_entry.config(state="normal")
-
         self.emp_id_entry.delete(0, tk.END)
+        self.rfid_entry.config(state="normal")
         self.rfid_entry.delete(0, tk.END)
-
-        self.emp_id_entry.focus_set()
+        self.mode_label.config(text="IDLE: SELECT ACTION", bg="#f5f5f5", fg="#757575")
+        self.set_ui_state("idle")
 
     def handle_save(self):
         eid = self.emp_id_entry.get().strip()
         uid = self.rfid_entry.get().strip()
-
+        
+        if self.mode not in ("add", "edit"):
+            messagebox.showwarning("Error", "Invalid operation.")
+            return
+        
         if not eid or not uid:
-            messagebox.showwarning("Input Error", "ID and RFID are required.")
+            messagebox.showwarning("Input Error", "Teacher ID and RFID UID are required.")
             return
 
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    # 1. Check if Teacher exists in main users table
-                    cur.execute("SELECT username FROM users WHERE employee_id = %s AND role = 'Teacher'", (eid,))
-                    teacher_exists = cur.fetchone()
-                    
-                    if not teacher_exists:
-                        messagebox.showerror("Error", f"Employee ID {eid} is not a registered Teacher.")
+                    # Verify Teacher Role
+                    cur.execute("SELECT username FROM users WHERE employee_id=%s AND role='Teacher'", (eid,))
+                    if not cur.fetchone():
+                        messagebox.showerror("Error", f"ID {eid} is not a registered Teacher.")
                         return
 
-                    # 2. Duplicate check
-                    cur.execute("SELECT employee_id FROM teacher_rfid_registration WHERE rfid_uid = %s AND employee_id != %s", (uid, eid))
+                    # Duplicate RFID check
+                    cur.execute("SELECT employee_id FROM teacher_rfid_registration WHERE rfid_uid=%s AND employee_id != %s", (uid, eid))
                     if cur.fetchone():
-                        messagebox.showerror("Duplicate RFID", "This card is already assigned to another teacher.")
+                        messagebox.showerror("Duplicate RFID", "This card is already assigned to someone else.")
                         return
 
-                    # 3. Save
-                    cur.execute("""
-                        INSERT INTO teacher_rfid_registration (employee_id, rfid_uid, status) 
-                        VALUES (%s, %s, 'Active') 
-                        ON DUPLICATE KEY UPDATE rfid_uid = VALUES(rfid_uid)
-                    """, (eid, uid))
+                    if self.mode == "add":
+                        cur.execute("SELECT employee_id FROM teacher_rfid_registration WHERE employee_id=%s", (eid,))
+                        if cur.fetchone():
+                            messagebox.showerror("Error", "Teacher already registered. Use Edit instead.")
+                            return
+                        cur.execute("INSERT INTO teacher_rfid_registration (employee_id, rfid_uid, status) VALUES (%s, %s, 'Active')", (eid, uid))
+                    else:  
+                        cur.execute("UPDATE teacher_rfid_registration SET rfid_uid=%s WHERE employee_id=%s", (uid, eid))
+                    
                     conn.commit()
-
-            messagebox.showinfo("Success", "Master access granted.")
+            messagebox.showinfo("Success", "Teacher access updated.")
             self.refresh_list()
             self.clear_form()
         except Exception as e:
@@ -320,59 +220,44 @@ class OverrideFrame(tk.Frame):
             print(f"List Refresh Error: {e}")
 
     def handle_delete(self):
-        eid = self.emp_id_entry.get().strip()
-        if not eid:
+        selected = self.tree.focus()
+        if not selected:
+            messagebox.showwarning("Warning", "Please select a record to delete.")
             return
 
-        confirm = messagebox.askyesno(
-            "Confirm Delete",
-            "Are you sure you want to delete this record?"
-        )
-
-        if not confirm:
-            return
+        eid = self.tree.item(selected, "values")[0]
+        confirm = messagebox.askyesno("Confirm", "Are you sure you want to delete?")
+        if not confirm: return
 
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    cur.execute(
-                        "DELETE FROM teacher_rfid_registration WHERE employee_id = %s",
-                        (eid,)
-                    )
+                    cur.execute("DELETE FROM teacher_rfid_registration WHERE employee_id=%s", (eid,))
                     conn.commit()
-
+            messagebox.showinfo("Success", "Record deleted.")
             self.refresh_list()
             self.clear_form()
-
         except Exception as e:
-            messagebox.showerror("Error", str(e))
+            messagebox.showerror("Error", str(e))  
 
     def toggle_status(self, new_status):
         selected = self.tree.focus()
         if not selected: return
         eid = self.tree.item(selected, "values")[0]
-        
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    cur.execute("UPDATE teacher_rfid_registration SET status = %s WHERE employee_id = %s", (new_status, eid))
+                    cur.execute("UPDATE teacher_rfid_registration SET status=%s WHERE employee_id=%s", (new_status, eid))
                     conn.commit()
             self.refresh_list()
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
-    
     def handle_rfid_tap(self, uid):
-        # Only fill if RFID entry is focused
         focused = self.focus_get()
-
         if focused == self.rfid_entry:
             self.rfid_entry.delete(0, tk.END)
             self.rfid_entry.insert(0, uid)
-            print("Override RFID filled:", uid)
 
     def validate_rfid(self, value):
-        # Reject spaces
-        if " " in value:
-            return False
-        return True
+        return " " not in value
