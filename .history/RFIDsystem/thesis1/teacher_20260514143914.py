@@ -1,0 +1,87 @@
+import tkinter as tk
+from tkinter import messagebox
+
+from teacher_frame.teacher_login import TeacherLoginFrame
+from teacher_frame.teacher_signup import TeacherSignUpFrame
+from teacher_frame.teacher_classroom import ClassroomFrame
+from teacher_frame.forgot_pass_teacher import ForgotPasswordFrame
+from teacher_frame.teacher_download_info import TeacherDownloadFrame
+from teacher_frame.teacher_dashboard import TeacherDashboard
+
+
+class TeacherApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Teacher System")
+        self.geometry("1200x700")
+
+        self.current_user = None
+
+        container = tk.Frame(self)
+        container.pack(fill="both", expand=True)
+
+        container.rowconfigure(0, weight=1)
+        container.columnconfigure(0, weight=1)
+
+        self.frames = {}
+
+        for F in (
+            TeacherLoginFrame,
+            TeacherSignUpFrame,
+            ForgotPasswordFrame,
+            TeacherDashboard,
+            ClassroomFrame,       
+            TeacherDownloadFrame
+        ):
+            frame = F(container, self)
+            self.frames[F.__name__] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("TeacherLoginFrame")
+
+    # ================= SWITCH FRAME =================
+    def show_frame(self, name):
+        if name in self.frames:
+            self.frames[name].tkraise()
+        else:
+            print(f"[ERROR] Frame not found: {name}")
+
+    # ================= LOGIN SUCCESS =================
+    def login_success(self, user_data):
+        # FIX: guard against None user_data before any .get() calls
+        if not user_data or not isinstance(user_data, dict):
+            messagebox.showerror("Login Error", "Invalid login data received.")
+            return
+
+        if user_data.get("role") != "Teacher":
+            messagebox.showerror("Access Denied", "Teachers only")
+            return
+
+        self.current_user = user_data
+
+        dashboard = self.frames.get("TeacherDashboard")
+        # FIX: guard against missing dashboard frame
+        if dashboard:
+            dashboard.load_user(user_data)
+
+        classroom = self.frames.get("ClassroomFrame")
+        if classroom:
+            classroom.load_user(user_data)
+
+        download = self.frames.get("TeacherDownloadFrame")
+        # FIX: set current_user on the app (self), not download.controller
+        # download.controller is self, so this was a redundant/risky double reference
+        if download and hasattr(download, "load_user"):
+            download.load_user(user_data)
+
+        self.show_frame("TeacherDashboard")
+
+    def logout(self):
+        self.current_user = None
+        self.show_frame("TeacherLoginFrame")
+
+
+if __name__ == "__main__":
+    app = TeacherApp()
+    app.mainloop()

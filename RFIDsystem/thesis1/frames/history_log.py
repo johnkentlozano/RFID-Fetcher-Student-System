@@ -67,65 +67,112 @@ class RFIDHistory(tk.Frame):
 
     def load_history_data(self):
         self.table.delete(*self.table.get_children())
+
         name_filter = self.search_var.get().strip()
         date_filter = self.date_var.get().strip()
 
-        # Define a visual style for Overrides
-        self.table.tag_configure('override_row', background='#fff3cd', foreground='#856404')
+        self.table.tag_configure(
+        'override_row',
+        background='#fff3cd',
+        foreground='#856404'
+        )
 
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    sql = """SELECT id, fetcher_name, student_name, grade, teacher, location, time_out 
-                             FROM history_log 
-                             WHERE DATE(time_out) = %s"""
+
+                    sql = """
+                        SELECT 
+                            id,
+                            fetcher_name,
+                            student_name,
+                            grade,
+                            employee_id,
+                            location,
+                            time_out
+                        FROM history_log
+                        WHERE DATE(time_out) = %s
+                    """
+
                     params = [date_filter]
 
                     if name_filter:
-                        sql += " AND (student_name LIKE %s OR fetcher_name LIKE %s OR teacher LIKE %s)"
-                        params.extend([f"%{name_filter}%", f"%{name_filter}%", f"%{name_filter}%"])
+                        sql += """
+                            AND (
+                                student_name LIKE %s OR
+                                fetcher_name LIKE %s OR
+                                location LIKE %s
+                            )
+                        """
+                        params.extend([
+                            f"%{name_filter}%",
+                            f"%{name_filter}%",
+                            f"%{name_filter}%"
+                        ])
 
                     sql += " ORDER BY time_out DESC"
-                    
-                    cur.execute(sql, tuple(params))
-                    for row in cur.fetchall():
-                        display_row = list(row)
-                        display_row[6] = row[6].strftime('%Y-%m-%d %I:%M %p')
-                        
-                        # Apply the "override_row" tag if the fetcher name contains 'OVERRIDE'
-                        if "OVERRIDE" in str(display_row[1]):
-                            self.table.insert("", "end", values=display_row, tags=('override_row',))
-                        else:
-                            self.table.insert("", "end", values=display_row)
-        except Exception as e:
-            print(f"Error loading history: {e}")
 
-    def save_log(self, f_name, s_name, s_id, grade, teacher, gate, is_override=False):
-        # If it's an override, we prefix the name so it's clear in the history table
-        final_fetcher_name = f"⭐ OVERRIDE: {f_name}" if is_override else f_name
+                    cur.execute(sql, tuple(params))
+                    rows = cur.fetchall()
+
+                    for row in rows:
+                        row = list(row)
+
+                    # format datetime
+                        if row[6]:
+                            row[6] = row[6].strftime('%Y-%m-%d %I:%M %p')
+
+                    # override highlight
+                        if "OVERRIDE" in str(row[1]):
+                            self.table.insert("", "end", values=row, tags=("override_row",))
+                        else:
+                            self.table.insert("", "end", values=row)
+
+        except Exception as e:
+            print("History Load Error:", e)
+
+    def auto_refresh(self):
+        if self.winfo_viewable():
+            self.load_history_data()
+
+    # 🔥 FAST REFRESH = REAL SECURITY FEEL
+        self.after(1500, self.auto_refresh)
         
+    def save_log(self, f_name, s_name, s_id, grade, employee_id, gate, is_override=False):
+
+        final_fetcher_name = (
+            f"⭐ OVERRIDE: {f_name}" if is_override else f_name
+        )
+
         try:
             with db_connect() as conn:
                 with conn.cursor() as cur:
-                    # 1. INSERT NEW RECORD
-                    cur.execute("""INSERT INTO history_log 
-                                    (fetcher_name, student_name, student_id, grade, teacher, location, time_out) 
-                                    VALUES (%s, %s, %s, %s, %s, %s, NOW())""", 
-                                    (final_fetcher_name, s_name, s_id, grade, teacher, gate))
 
-                    # 2. AUTOMATIC CLEANUP (Keep only 7 days)
-                    cur.execute("DELETE FROM history_log WHERE time_out < NOW() - INTERVAL 7 DAY")
+                    cur.execute("""
+                        INSERT INTO history_log (
+                        fetcher_name,
+                        student_name,
+                        student_id,
+                        grade,
+                        employee_id,
+                        location,
+                        time_out
+                    )
+                    VALUES (%s,%s,%s,%s,%s,%s,NOW())
+                """, (
+                    final_fetcher_name,
+                    s_name,
+                    s_id,
+                    grade,
+                    employee_id,
+                    gate
+                ))
 
                     conn.commit()
-            
-            # Refresh table if the frame is active
+
+        # instant refresh (IMPORTANT FOR LIVE SYSTEM)
             if self.winfo_viewable():
                 self.load_history_data()
-        except Exception as e:
-            messagebox.showerror("Database Error", f"Could not save: {e}")
 
-    def auto_refresh(self):
-        
-        if not self.search_var.get() and self.winfo_viewable():
-            self.load_history_data()
-        self.after(10000, self.auto_refresh)
+        except Exception as e:
+            messagebox.showerror("Database Error", str(e))
