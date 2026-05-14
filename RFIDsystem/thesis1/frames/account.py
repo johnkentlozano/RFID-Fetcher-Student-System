@@ -3,8 +3,11 @@ from tkinter import messagebox, ttk
 import os
 import sys
 from datetime import datetime
+<<<<<<< HEAD
 from frames.change_password import ChangePasswordWindow
 
+=======
+>>>>>>> 85de193ca02343e64aed75aaee70e206af585008
 
 # =================== PATH SETUP ===================
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -142,6 +145,11 @@ class Account(tk.Frame):
             self.account_table.insert("", "end", values=row)
 
     def change_password(self):
+<<<<<<< HEAD
+=======
+        # Local import to prevent circular dependency
+        from frames.change_password import ChangePasswordWindow
+>>>>>>> 85de193ca02343e64aed75aaee70e206af585008
         selected = self.account_table.focus()
         if not selected:
             messagebox.showwarning("Selection Required", "Please select a user from the table.")

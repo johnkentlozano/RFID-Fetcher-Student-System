@@ -45,12 +45,16 @@ class SignUpFrame(tk.Frame):
         form_container = tk.Frame(panel, bg="white")
         form_container.pack(fill="x", padx=40)
 
+<<<<<<< HEAD
 
         self.rfid_uid = self.entry(form_container, "Tap RFID (Optional)", validate_type="alphanumeric")
         self.rfid_uid.focus()
         self.rfid_uid.bind("<Return>", self.rfid_scanned)
         self.rfid_buffer = ""
         self.bind_all("<Key>", self.capture_rfid)
+=======
+        # Pass the new 'alphanumeric' flag to the entry helper
+>>>>>>> 85de193ca02343e64aed75aaee70e206af585008
         self.username = self.entry(form_container, "Username", validate_type="alphanumeric")
         self.employee_id = self.entry(form_container, "Employee ID", validate_type="numeric")
         
@@ -155,6 +159,7 @@ class SignUpFrame(tk.Frame):
         pw = self.password.get()
         cpw = self.confirm.get()
         role = self.role_var.get()
+        
 
     # ✅ Required fields
         if not user or not pw or not emp_id:
@@ -210,6 +215,7 @@ class SignUpFrame(tk.Frame):
     
     def validate_employeed_id(self, text):
         return text.isdigit() or text == ""
+<<<<<<< HEAD
     
     def rfid_scanned(self, event=None):
         rfid_value = self.rfid_uid.get().strip()
@@ -231,3 +237,24 @@ class SignUpFrame(tk.Frame):
                 self.username.focus()
         else:
             self.rfid_buffer += event.char
+=======
+
+    def clear_fields(self):
+        self.username.delete(0, tk.END)
+        self.employee_id.delete(0, tk.END)
+        self.password.delete(0, tk.END)
+        self.confirm.delete(0, tk.END)
+
+        self.password.config(show="*")
+        self.confirm.config(show="*")
+
+        self.role_var.set("Teacher")
+
+        # Reset password requirement colors
+        for label in self.pw_reqs.values():
+            label.config(fg="red")
+
+    def tkraise(self, aboveThis=None):
+        super().tkraise(aboveThis)
+        self.clear_fields()
+>>>>>>> 85de193ca02343e64aed75aaee70e206af585008

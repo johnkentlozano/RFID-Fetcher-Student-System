@@ -237,6 +237,8 @@ class LoginFrame(tk.Frame):
         self.password.delete(0, tk.END)
         self.rfid_uid.delete(0, tk.END)
 
+        self.password.config(show="*")
+
     def tkraise(self, aboveThis=None):
         super().tkraise(aboveThis)
         self.reset_fields()

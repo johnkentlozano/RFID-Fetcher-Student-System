@@ -261,7 +261,11 @@ class Report(tk.Frame):
         messagebox.showinfo("Export Success", f"Reports have been saved as {fmt.upper()}.")
 
     def save_file(self, table, fmt, path):
+<<<<<<< HEAD
 
+=======
+        """Helper to handle the actual writing logic"""
+>>>>>>> 85de193ca02343e64aed75aaee70e206af585008
         headers = table["columns"]
         rows = [table.item(i, "values") for i in table.get_children()]
 
